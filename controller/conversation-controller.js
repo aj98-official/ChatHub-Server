@@ -1,10 +1,24 @@
-const mongoose = require('mongoose');
-const Conversation = require('./conversation-model');
 
-async function conversationExists(user1Id, user2Id) {
-    const conversation = await Conversation.findOne({
-        members: { $all: [mongoose.Types.ObjectId(user1Id), mongoose.Types.ObjectId(user2Id)] }
-    });
+import Conversation from '../model/conversation-model.js';
 
-    return conversation !== null;
+
+export const addConversation = async (req, res) => {
+    const { members } = req.body;
+    try {
+        const conversation = await Conversation.findOne({
+            members: { $all: members }
+        });
+
+        if (!conversation) {
+            const newConversation = new Conversation({ members: members, messages: [] });
+            await newConversation.save();
+            return res.status(200).json(newConversation);
+        }
+        else {
+            return res.status(200).json(conversation);
+        }
+    }
+    catch (err) {
+        return res.status(500).json(err.message);
+    }
 }

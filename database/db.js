@@ -8,7 +8,6 @@ const password = process.env.DB_PASSWORD;
 
 const Connection = async () => {
   const URL = `mongodb+srv://ashutoshjais398:${password}@chathub.fbrdou4.mongodb.net/?retryWrites=true&w=majority`;
-
   try {
     await mongoose.connect(URL, {
       useUnifiedTopology: true,
